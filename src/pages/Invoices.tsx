@@ -31,6 +31,7 @@ export const Invoices: React.FC = () => {
     deleteInvoice,
     loading,
     alert,
+    triggerPrint,
   } = useApp();
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
@@ -144,8 +145,8 @@ export const Invoices: React.FC = () => {
       items: validItems,
     };
 
-    const success = await addInvoice(payload);
-    if (success) {
+    const createdInvoice = await addInvoice(payload);
+    if (createdInvoice) {
       // Reset Form State
       setCustomerId(0);
       setInvoiceDate(new Date().toISOString().split("T")[0]);
@@ -154,6 +155,9 @@ export const Invoices: React.FC = () => {
       setAmountPaid(0);
       setPaymentType("cash");
       setIsNewModalOpen(false);
+
+      // Immediately print the invoice receipt PDF
+      triggerPrint({ type: "invoice", invoice: createdInvoice });
     }
   };
 
@@ -612,12 +616,21 @@ export const Invoices: React.FC = () => {
               </div>
             </div>
 
-            <button
-              onClick={() => setIsViewModalOpen(false)}
-              className="w-full bg-[#1c2233] hover:bg-[#2a3248] border border-[#2a3248] text-[#e8eaf0] py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
-            >
-              Close Receipt
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => triggerPrint({ type: "invoice", invoice: selectedInvoice })}
+                className="flex-grow bg-[#6c63ff] hover:bg-[#7c75ff] text-white py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <FileDown size={14} /> Print / Save PDF
+              </button>
+              <button
+                onClick={() => setIsViewModalOpen(false)}
+                className="flex-grow bg-[#1c2233] hover:bg-[#2a3248] border border-[#2a3248] text-[#e8eaf0] py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Close Receipt
+              </button>
+            </div>
           </div>
         )}
       </Modal>

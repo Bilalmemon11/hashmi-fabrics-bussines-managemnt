@@ -14,34 +14,48 @@ import { Expenses } from "./pages/Expenses";
 import { Reports } from "./pages/Reports";
 import { ProfitLoss } from "./pages/ProfitLoss";
 
+import { useApp } from "./context/AppContext";
+import { PrintTemplate } from "./components/PrintTemplate";
+
+function AppContent() {
+  const { printData } = useApp();
+
+  return (
+    <BrowserRouter>
+      <div className="flex h-screen bg-[#0f1117] overflow-hidden">
+        {/* Left Persistent Navigation Rail */}
+        <Sidebar />
+
+        {/* Right Main Scrollable View Stage */}
+        <div className="flex-grow flex flex-col overflow-hidden relative">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/invoices" element={<Invoices />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/vendors" element={<Vendors />} />
+            <Route path="/purchases" element={<Purchases />} />
+            <Route path="/expenses" element={<Expenses />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/profit-loss" element={<ProfitLoss />} />
+            
+            {/* Fallback redirect */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+      </div>
+
+      {/* Hidden print template rendered here, only visible in @media print */}
+      <PrintTemplate data={printData} />
+    </BrowserRouter>
+  );
+}
+
 export default function App() {
   return (
     <AppProvider>
-      <BrowserRouter>
-        <div className="flex h-screen bg-[#0f1117] overflow-hidden">
-          {/* Left Persistent Navigation Rail */}
-          <Sidebar />
-
-          {/* Right Main Scrollable View Stage */}
-          <div className="flex-grow flex flex-col overflow-hidden relative">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/invoices" element={<Invoices />} />
-              <Route path="/customers" element={<Customers />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/inventory" element={<Inventory />} />
-              <Route path="/vendors" element={<Vendors />} />
-              <Route path="/purchases" element={<Purchases />} />
-              <Route path="/expenses" element={<Expenses />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/profit-loss" element={<ProfitLoss />} />
-              
-              {/* Fallback redirect */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </div>
-        </div>
-      </BrowserRouter>
+      <AppContent />
     </AppProvider>
   );
 }

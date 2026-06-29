@@ -20,6 +20,10 @@ interface AppContextType {
   setAlert: (alert: AlertMessage | null) => void;
   showAlert: (text: string, type?: "success" | "error") => void;
   
+  printData: any | null;
+  setPrintData: (data: any | null) => void;
+  triggerPrint: (data: any) => void;
+  
   refreshAll: () => Promise<void>;
   
   addProduct: (product: Omit<Product, "id" | "createdAt" | "updatedAt">) => Promise<boolean>;
@@ -46,7 +50,7 @@ interface AppContextType {
     balance: number;
     payment_type: "cash" | "credit";
     items: { product_id: number; qty: number; unit_price: number; total: number }[];
-  }) => Promise<boolean>;
+  }) => Promise<any | boolean>;
   deleteInvoice: (id: number) => Promise<boolean>;
   
   addPurchase: (purchase: Omit<Purchase, "id" | "po_no" | "createdAt" | "updatedAt">) => Promise<boolean>;
@@ -77,6 +81,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   const [alert, setAlertState] = useState<AlertMessage | null>(null);
+  const [printData, setPrintData] = useState<any | null>(null);
 
   const showAlert = useCallback((text: string, type: "success" | "error" = "success") => {
     setAlertState({ text, type });
@@ -84,6 +89,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const setAlert = useCallback((val: AlertMessage | null) => {
     setAlertState(val);
+  }, []);
+
+  const triggerPrint = useCallback((data: any) => {
+    setPrintData(data);
+    setTimeout(() => {
+      window.print();
+    }, 200);
   }, []);
 
   // Clear alert after 4 seconds
@@ -319,7 +331,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (res.data && res.data.success) {
         showAlert("Invoice created and stock updated", "success");
         await refreshAll();
-        return true;
+        return res.data.data;
       }
       return false;
     } catch (err: any) {
@@ -424,6 +436,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         alert,
         setAlert,
         showAlert,
+        printData,
+        setPrintData,
+        triggerPrint,
         refreshAll,
         addProduct,
         updateProduct,

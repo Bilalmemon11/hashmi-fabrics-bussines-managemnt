@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Eye,
   Trash2,
+  FileDown,
 } from "lucide-react";
 import api from "../services/api";
 
@@ -24,6 +25,7 @@ export const Vendors: React.FC = () => {
     payVendor,
     deleteVendor,
     alert,
+    triggerPrint,
   } = useApp();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -85,6 +87,27 @@ export const Vendors: React.FC = () => {
     const success = await payVendor(selectedVendor.id, payAmount, payNotes, payDate);
     if (success) {
       setIsPayModalOpen(false);
+
+      // Fetch updated supplier ledger details (including today's new payment) from database
+      try {
+        const res = await api.get(`/vendors/${selectedVendor.id}`);
+        if (res.data && res.data.success) {
+          const updatedVendor = res.data.data;
+          triggerPrint({
+            type: "vendor-receipt",
+            vendor: updatedVendor,
+            payments: updatedVendor.payments,
+            currentPayment: {
+              amount: payAmount,
+              date: payDate,
+              notes: payNotes,
+            }
+          });
+        }
+      } catch (err) {
+        console.error("Error printing supplier voucher:", err);
+      }
+
       setSelectedVendor(null);
     }
   };
@@ -496,12 +519,27 @@ export const Vendors: React.FC = () => {
               </div>
             </div>
 
-            <button
-              onClick={() => setIsViewModalOpen(false)}
-              className="w-full bg-[#1c2233] hover:bg-[#2a3248] border border-[#2a3248] text-[#e8eaf0] py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
-            >
-              Close Ledger
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  triggerPrint({
+                    type: "vendor-receipt",
+                    vendor: selectedVendor,
+                    payments: selectedVendor.payments,
+                  })
+                }
+                className="flex-grow bg-[#6c63ff] hover:bg-[#7c75ff] text-white py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <FileDown size={14} /> Print Statement
+              </button>
+              <button
+                onClick={() => setIsViewModalOpen(false)}
+                className="flex-grow bg-[#1c2233] hover:bg-[#2a3248] border border-[#2a3248] text-[#e8eaf0] py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Close Ledger
+              </button>
+            </div>
           </div>
         )}
       </Modal>
