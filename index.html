@@ -3,11 +3,142 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
+    <title>Hashmi Fabrics Business Suite</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Style for Printing -->
+    <style>
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        #print-section, #print-section * {
+          visibility: visible;
+        }
+        #print-section {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+      }
+    </style>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body class="bg-[#fafafa] text-gray-900 font-sans min-h-screen flex">
+
+    <!-- Print Container (hidden on screen, visible during print) -->
+    <div id="print-section" class="hidden"></div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="flex w-full min-h-screen">
+      
+      <!-- SIDEBAR -->
+      <aside class="w-64 bg-slate-900 text-white flex flex-col shrink-0 border-r border-slate-800">
+        <!-- Logo Header -->
+        <div class="p-6 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-emerald-600 rounded-lg text-white">
+              <i data-lucide="scissors" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h1 class="font-bold text-lg leading-tight tracking-tight">Hashmi Fabrics</h1>
+              <p class="text-xs text-slate-400 font-medium">Business Suite</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="flex-1 px-4 py-6 space-y-1">
+          <button data-tab="dashboard" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-200 text-emerald-400 bg-slate-800/80">
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+          </button>
+          <button data-tab="customers" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-200 text-slate-400 hover:text-white hover:bg-slate-800">
+            <i data-lucide="users" class="w-5 h-5"></i> Customer Ledgers
+          </button>
+          <button data-tab="vendors" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-200 text-slate-400 hover:text-white hover:bg-slate-800">
+            <i data-lucide="building-2" class="w-5 h-5"></i> Supplier Mills
+          </button>
+          <button data-tab="products" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-200 text-slate-400 hover:text-white hover:bg-slate-800">
+            <i data-lucide="package" class="w-5 h-5"></i> Inventory Catalog
+          </button>
+          <button data-tab="invoices" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-200 text-slate-400 hover:text-white hover:bg-slate-800">
+            <i data-lucide="receipt" class="w-5 h-5"></i> Fabric Billing
+          </button>
+          <button data-tab="expenses" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-200 text-slate-400 hover:text-white hover:bg-slate-800">
+            <i data-lucide="wallet" class="w-5 h-5"></i> Shop Expenses
+          </button>
+          <button data-tab="reports" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-200 text-slate-400 hover:text-white hover:bg-slate-800">
+            <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Profit & Loss / Reports
+          </button>
+          <button data-tab="laravel" class="tab-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition duration-200 text-emerald-400 border border-emerald-800/30 bg-emerald-950/20 hover:bg-emerald-900/20 mt-4">
+            <i data-lucide="code" class="w-5 h-5"></i> Laravel & SQL Files
+          </button>
+        </nav>
+
+        <!-- Footer / User Details -->
+        <div class="p-4 border-t border-slate-800 text-xs text-slate-400 bg-slate-950/30">
+          <p class="font-semibold text-slate-300 truncate">razahafizbilal39@gmail.com</p>
+          <p class="mt-1 text-[10px] text-slate-500 font-mono">HTML, CSS, JS + LARAVEL</p>
+        </div>
+      </aside>
+
+      <!-- CONTENT CONTAINER -->
+      <main class="flex-1 flex flex-col min-h-screen overflow-y-auto">
+        <!-- TOPBAR -->
+        <header class="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-8 shrink-0">
+          <div class="flex items-center gap-2">
+            <h2 id="current-page-title" class="font-semibold text-lg text-gray-800">Dashboard</h2>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-600 font-medium">
+            <div class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200/50">
+              <i data-lucide="clock" class="w-4 h-4 text-gray-500"></i>
+              <span id="current-time" class="font-mono text-xs">2026-06-29 13:06:51</span>
+            </div>
+            <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-semibold uppercase">Preview Database</span>
+          </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <div id="content-area" class="flex-1 p-8">
+          <!-- Views will be dynamically loaded here by main.js -->
+          <div class="flex items-center justify-center h-64 text-gray-500">
+            <div class="text-center">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500 mx-auto mb-4"></div>
+              <p>Loading application data...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <!-- GLOBAL NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-10 opacity-0 pointer-events-none transition duration-300 bg-slate-900 text-white px-4 py-3 rounded-lg shadow-xl border border-slate-800 flex items-center gap-2 z-50">
+      <i id="toast-icon" data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+      <span id="toast-msg" class="text-sm font-medium">Action completed!</span>
+    </div>
+
+    <!-- LOAD THE LOGIC -->
+    <script src="/main.js"></script>
   </body>
 </html>
-

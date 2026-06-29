@@ -1,11 +1,20 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
+import { execSync } from "child_process";
 import { createServer as createViteServer } from "vite";
 
 const app = express();
 const PORT = 3000;
 const DB_FILE = path.join(process.cwd(), "db.json");
+
+// Check if PHP and MySQL are available
+try {
+  const phpVersion = execSync("php -v", { encoding: "utf-8" });
+  fs.writeFileSync(path.join(process.cwd(), "php_check.txt"), "PHP IS AVAILABLE:\n" + phpVersion);
+} catch (e: any) {
+  fs.writeFileSync(path.join(process.cwd(), "php_check.txt"), "PHP IS NOT AVAILABLE:\n" + e.message);
+}
 
 app.use(express.json());
 
