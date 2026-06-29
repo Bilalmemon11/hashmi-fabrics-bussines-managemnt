@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Hashmi Fabrics Business Management System",
+  "description": "Complete business management system for Hashmi Fabrics tracking sales, stock, customers, vendors, expenses, and reporting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
